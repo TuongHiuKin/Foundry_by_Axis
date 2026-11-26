@@ -12,7 +12,7 @@ const BASE_URL = process.env.E2E_BASE_URL ?? 'http://localhost:5173'
 
 // Database riêng cho E2E (tạo sẵn bởi docker-compose: foundry_e2e).
 const E2E_DATABASE_URL =
-  process.env.E2E_DATABASE_URL ?? 'postgres://foundry:foundry@localhost:5432/foundry_e2e?sslmode=disable'
+  process.env.E2E_DATABASE_URL ?? 'postgres://foundry:foundry@localhost:5433/foundry_e2e?sslmode=disable'
 
 export default defineConfig({
   testDir: 'tests/e2e',

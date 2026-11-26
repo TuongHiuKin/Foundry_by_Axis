@@ -39,7 +39,7 @@ docs/          product, architecture, adr, api, testing
 ## Commands (run each as a separate step, no chaining)
 | Purpose | Command | Dir |
 |---|---|---|
-| Start PostgreSQL | `docker compose up -d` | root |
+| Start PostgreSQL | `docker compose up -d` (host port **5433**) | root |
 | Restore FE deps | `npm ci` | FE |
 | Build BE | `go build ./...` | BE |
 | Vet BE | `go vet ./...` | BE |
@@ -66,7 +66,7 @@ Env vars for BE: `DATABASE_URL`, `JWT_SECRET`, `ADMIN_EMAIL` (registering with t
 
 - Test folders (locked during GREEN/REFACTOR): `BE/*_test.go`, `BE/testdata/`, `FE/src/**/*.test.ts(x)`, `FE/tests/e2e/`, `FE/playwright.config.ts`.
 - Databases: `docker compose up -d` creates `foundry`, `foundry_test`, `foundry_e2e` (init script `BE/testdata/init-db.sql`, runs only on a fresh volume).
-- BE tests: `newTestServer(t)` in `BE/testhelpers_test.go` truncates all tables and builds the router; skips when `TEST_DATABASE_URL` is unset. Set it to `postgres://foundry:foundry@localhost:5432/foundry_test?sslmode=disable`. Never point it at a real database.
+- BE tests: `newTestServer(t)` in `BE/testhelpers_test.go` truncates all tables and builds the router; skips when `TEST_DATABASE_URL` is unset. Set it to `postgres://foundry:foundry@localhost:5433/foundry_test?sslmode=disable`. Never point it at a real database.
 - E2E: Playwright `webServer` starts BE (`go run .` in `BE/`, port 8080, DB `foundry_e2e`, `ADMIN_EMAIL=admin@e2e.test`) and FE dev (port 5173). PostgreSQL must be running. E2E DB is not wiped: use `uniqueEmail()` / unique titles from `FE/tests/e2e/helpers.ts`.
 - Env overrides: `E2E_DATABASE_URL`, `E2E_BASE_URL`, `PW_CHANNEL=chrome` (use installed Chrome instead of Playwright browsers).
 - Playwright browsers: user installs once with `npx playwright install chromium` (agents never install).
