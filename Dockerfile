@@ -1,17 +1,17 @@
 # Bước 1: build web React thành file tĩnh (HTML/CSS/JS)
 FROM node:22-alpine AS web
 WORKDIR /app
-COPY frontend/package*.json ./
+COPY FE/package*.json ./
 RUN npm ci
-COPY frontend/ ./
+COPY FE/ ./
 RUN npm run build
 
 # Bước 2: build server Go thành một file chạy duy nhất
 FROM golang:1.26-alpine AS api
 WORKDIR /app
-COPY backend/go.mod backend/go.sum ./
+COPY BE/go.mod BE/go.sum ./
 RUN go mod download
-COPY backend/ ./
+COPY BE/ ./
 RUN CGO_ENABLED=0 go build -o server .
 
 # Bước 3: image cuối cùng, chỉ chứa file chạy Go và web đã build

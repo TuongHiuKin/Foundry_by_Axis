@@ -2,14 +2,15 @@
 
 Nền tảng để tác giả đăng sản phẩm, cộng đồng dùng thử và góp ý.
 
-- **Backend:** Go + Gin, PostgreSQL (thư mục `backend/`)
-- **Web:** React + Vite + TypeScript (thư mục `frontend/`)
+- **Backend:** Go + Gin, PostgreSQL (thư mục `BE/`)
+- **Web:** React + Vite + TypeScript (thư mục `FE/`)
+- **Mobile:** React Native + Expo (thư mục `Mobile/`, làm sau)
 - Khi deploy, server Go trả cả API (`/api/...`) lẫn trang web React, nên chỉ cần **một** service.
 
 ## Cấu trúc
 
 ```
-backend/
+BE/
   main.go        khởi động server, khai báo toàn bộ API
   db.go          kết nối PostgreSQL, tự tạo bảng từ schema.sql
   schema.sql     cấu trúc các bảng
@@ -19,13 +20,16 @@ backend/
   reports.go     báo cáo vi phạm
   admin.go       API cho trang admin
   static.go      trả file web React
-frontend/src/
+FE/src/
   api.ts         hàm gọi API dùng chung
   auth.tsx       lưu trạng thái đăng nhập
   App.tsx        menu + định tuyến các trang
   pages/         các trang: Home, ProductDetail, Login/Register, ProductForm, Dashboard, Admin
 Dockerfile       build web + Go thành một image để deploy
 render.yaml      cấu hình deploy trên Render
+Mobile/          app Expo (chưa làm)
+.agent/          skill và quy ước cho agent viết code
+AGENTS.md        hướng dẫn chung cho mọi agent
 ```
 
 ## Chạy trên máy
@@ -37,14 +41,14 @@ Cần cài: Go, Node.js 22, Docker Desktop.
 docker compose up -d
 
 # 2. Chạy backend (cửa sổ terminal 1)
-cd backend
+cd BE
 cp .env.example .env      # sửa ADMIN_EMAIL thành email của bạn
 # Windows PowerShell: đặt biến môi trường bằng $env:DATABASE_URL="..." v.v. hoặc dùng Git Bash:
 export $(cat .env | xargs)
 go run .
 
 # 3. Chạy web (cửa sổ terminal 2)
-cd frontend
+cd FE
 npm install
 npm run dev               # mở http://localhost:5173
 ```

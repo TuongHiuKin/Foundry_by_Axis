@@ -1,7 +1,7 @@
 node_modules/
-frontend/dist/
-backend/web/
-backend/server
-backend/tmp/
+FE/dist/
+BE/web/
+BE/server
+BE/tmp/
 .env
 *.exe
