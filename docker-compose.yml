@@ -10,5 +10,7 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      # Tạo thêm foundry_test và foundry_e2e (chỉ chạy khi volume còn trống)
+      - ./BE/testdata/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
 volumes:
   pgdata:

@@ -40,5 +40,11 @@ func likeProduct(c *gin.Context) {
 - Error messages to users in Vietnamese.
 - No ORM, no repository/service layer, no new dependency unless stdlib/gin/pgx cannot do it (explain in PR).
 
+## Tests
+- Put tests next to code: `<area>_test.go` (package `main`).
+- Start each test with `r := newTestServer(t)` (fresh DB, skips without `TEST_DATABASE_URL`).
+- Helpers in `testhelpers_test.go`: `doJSON`, `doList`, `doRaw`, `registerUser`, `newProduct`. Email `admin@test.com` is admin.
+- One behavior per test; assert status code and key JSON fields; error messages are Vietnamese.
+
 ## Verify
 `gofmt -l .` (empty) → `go vet ./...` → `go build ./...` → `go test ./...` (in `BE/`). Manual check with curl against local DB (`docker compose up -d`).

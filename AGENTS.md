@@ -44,9 +44,12 @@ docs/          product, architecture, adr, api, testing
 | Build BE | `go build ./...` | BE |
 | Vet BE | `go vet ./...` | BE |
 | Format check BE | `gofmt -l .` (must print nothing) | BE |
-| Unit tests BE | `go test ./...` | BE |
+| Unit tests BE | `go test ./...` (needs env `TEST_DATABASE_URL`, else DB tests skip) | BE |
 | Build FE (tsc + vite) | `npm run build` | FE |
 | Lint FE | `npm run lint` | FE |
+| Unit tests FE (Vitest) | `npm test` | FE |
+| E2E tests (Playwright) | `npm run test:e2e` | FE |
+| Screenshots | `npm run screenshot` (reads `<LOCAL_DIR>/screenshots/request.json`) | FE |
 | Run BE | `go run .` (needs env, see `BE/.env.example`) | BE |
 | Run FE dev | `npm run dev` → http://localhost:5173, proxies `/api` to :8080 | FE |
 | Docker image | `docker build -t foundry .` | root |
@@ -54,9 +57,20 @@ docs/          product, architecture, adr, api, testing
 Env vars for BE: `DATABASE_URL`, `JWT_SECRET`, `ADMIN_EMAIL` (registering with this email → admin), `PORT` (default 8080).
 
 ## Tests
-- NOT set up yet: no Go test files, no Vitest, no Playwright. Before the first TDD task run skill `init-project` (`.agents/skills/init-project/SKILL.md`); it reuses this file and only adds missing sections.
-- Planned: BE unit tests with `go test` + `net/http/httptest` against a test database (`TEST_DATABASE_URL`, skip when unset); FE unit with Vitest; E2E with Playwright in `FE/tests/e2e/`, webServer starting BE + FE dev.
-- LOCAL_DIR = <main repo>/.local, resolved via `git rev-parse --path-format=absolute --git-common-dir` (works from worktrees).
+| Level | Framework | Folder | Command (dir) |
+|---|---|---|---|
+| BE unit/API | `go test` + `net/http/httptest` | `BE/*_test.go` | `go test ./...` (BE) |
+| FE unit | Vitest (node env) | `FE/src/**/*.test.ts(x)` | `npm test` (FE) |
+| E2E | Playwright (`FE/playwright.config.ts`) | `FE/tests/e2e/` | `npm run test:e2e` (FE) |
+| Screenshot suite | Playwright, tag `@screenshot` | `FE/tests/e2e/screenshot.spec.ts` | `npm run screenshot` (FE) |
+
+- Test folders (locked during GREEN/REFACTOR): `BE/*_test.go`, `BE/testdata/`, `FE/src/**/*.test.ts(x)`, `FE/tests/e2e/`, `FE/playwright.config.ts`.
+- Databases: `docker compose up -d` creates `foundry`, `foundry_test`, `foundry_e2e` (init script `BE/testdata/init-db.sql`, runs only on a fresh volume).
+- BE tests: `newTestServer(t)` in `BE/testhelpers_test.go` truncates all tables and builds the router; skips when `TEST_DATABASE_URL` is unset. Set it to `postgres://foundry:foundry@localhost:5432/foundry_test?sslmode=disable`. Never point it at a real database.
+- E2E: Playwright `webServer` starts BE (`go run .` in `BE/`, port 8080, DB `foundry_e2e`, `ADMIN_EMAIL=admin@e2e.test`) and FE dev (port 5173). PostgreSQL must be running. E2E DB is not wiped: use `uniqueEmail()` / unique titles from `FE/tests/e2e/helpers.ts`.
+- Env overrides: `E2E_DATABASE_URL`, `E2E_BASE_URL`, `PW_CHANNEL=chrome` (use installed Chrome instead of Playwright browsers).
+- Playwright browsers: user installs once with `npx playwright install chromium` (agents never install).
+- LOCAL_DIR = <main repo>/.local, resolved via `git rev-parse --path-format=absolute --git-common-dir` (works from worktrees). Playwright results, report and screenshots go there.
 
 ## Screens (FE routes)
 `/` home + search/tag filter · `/products/:id` detail + feedback + report · `/login` · `/register` · `/products/new` · `/products/:id/edit` · `/dashboard` (login) · `/admin` (admin)

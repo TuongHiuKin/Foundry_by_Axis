@@ -6,7 +6,7 @@ description: Self-check every agent must run before handing a Foundry change to 
 
 ## 1. Automated (each command separately)
 `BE/`: `gofmt -l .` (empty), `go vet ./...`, `go build ./...`, `go test ./...`
-`FE/`: `npm run build`, `npm run lint`
+`FE/`: `npm run build`, `npm run lint`, `npm test`, `npm run test:e2e`
 All clean. Never disable lint rules or TS checks to pass.
 
 ## 2. Checklist
