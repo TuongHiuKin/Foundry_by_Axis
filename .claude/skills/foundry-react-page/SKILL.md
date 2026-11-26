@@ -36,5 +36,9 @@ export default function Name() {
 - Accessible labels/roles on inputs and buttons (needed for Playwright locators).
 - No UI/state libraries (Redux, MUI, Tailwind, …) without owner approval.
 
+## Tests
+- Unit (Vitest): `src/**/*.test.ts(x)`, node environment (stub `fetch`/`localStorage` with `vi.stubGlobal`, see `src/api.test.ts`).
+- E2E (Playwright): `tests/e2e/*.spec.ts`; reuse `register`, `createProduct`, `uniqueEmail` from `tests/e2e/helpers.ts`. Locate by role/label/placeholder/text.
+
 ## Verify
-`npm run build` and `npm run lint` in `FE/` must be clean.
+`npm run build`, `npm run lint`, `npm test`, `npm run test:e2e` in `FE/` must be clean.

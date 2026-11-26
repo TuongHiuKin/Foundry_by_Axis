@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"net/http"
+	"net/mail"
 	"strings"
 	"time"
 
@@ -28,7 +29,7 @@ type User struct {
 // ---------- Đăng ký ----------
 
 type registerInput struct {
-	Email    string `json:"email" binding:"required,email"`
+	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required,min=6"`
 	Name     string `json:"name" binding:"required"`
 }
@@ -39,7 +40,12 @@ func register(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "Email, mật khẩu (ít nhất 6 ký tự) và tên là bắt buộc"})
 		return
 	}
+	// Bỏ khoảng trắng thừa và viết thường trước, rồi mới kiểm tra định dạng email.
 	in.Email = strings.ToLower(strings.TrimSpace(in.Email))
+	if addr, err := mail.ParseAddress(in.Email); err != nil || addr.Address != in.Email {
+		c.JSON(400, gin.H{"error": "Email không hợp lệ"})
+		return
+	}
 
 	// Không bao giờ lưu mật khẩu gốc, chỉ lưu bản đã băm (hash).
 	hash, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.DefaultCost)
