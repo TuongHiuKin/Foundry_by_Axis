@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: foundry
       POSTGRES_DB: foundry
     ports:
-      - "5432:5432"
+      - "5433:5432" # máy local: cổng 5433 để không đụng PostgreSQL của dự án khác
     volumes:
       - pgdata:/var/lib/postgresql/data
       # Tạo thêm foundry_test và foundry_e2e (chỉ chạy khi volume còn trống)

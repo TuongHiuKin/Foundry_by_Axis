@@ -3,7 +3,7 @@ package main
 // Các hàm dùng chung cho test.
 // Test cần một database PostgreSQL RIÊNG cho test (dữ liệu sẽ bị xoá sạch mỗi test).
 // Đặt biến TEST_DATABASE_URL, ví dụ:
-//   postgres://foundry:foundry@localhost:5432/foundry_test?sslmode=disable
+//   postgres://foundry:foundry@localhost:5433/foundry_test?sslmode=disable
 // Nếu không đặt, các test cần database sẽ được bỏ qua (skip).
 
 import (
