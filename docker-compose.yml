@@ -1,0 +1,14 @@
+# Chỉ dùng khi chạy trên máy: bật PostgreSQL bằng lệnh "docker compose up -d"
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: foundry
+      POSTGRES_PASSWORD: foundry
+      POSTGRES_DB: foundry
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:

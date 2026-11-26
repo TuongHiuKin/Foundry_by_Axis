@@ -1,0 +1,15 @@
+# Cấu hình để Render tự tạo service từ repo (Blueprint).
+services:
+  - type: web
+    name: foundry
+    runtime: docker
+    plan: free
+    region: singapore
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        sync: false # Render sẽ hỏi Kiên dán chuỗi kết nối Neon vào
+      - key: ADMIN_EMAIL
+        sync: false # email sẽ thành admin khi đăng ký
+      - key: JWT_SECRET
+        generateValue: true # Render tự tạo chuỗi bí mật ngẫu nhiên
