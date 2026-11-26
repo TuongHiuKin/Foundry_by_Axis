@@ -1,22 +1,15 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { api, getToken, type User } from './api'
-
-type AuthState = {
-  user: User | null
-  loading: boolean
-  saveLogin: (token: string, user: User) => void
-  logout: () => void
-}
-
-const AuthContext = createContext<AuthState>(null!)
+import { AuthContext } from './auth'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  // Chỉ cần "đang tải" khi có token để hỏi server.
+  const [loading, setLoading] = useState(() => getToken() !== null)
 
   // Mở web lên: nếu còn token thì hỏi server xem đó là ai.
   useEffect(() => {
-    if (!getToken()) return setLoading(false)
+    if (!getToken()) return
     api<User>('/auth/me')
       .then(setUser)
       .catch(() => localStorage.removeItem('token'))
@@ -39,5 +32,3 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     </AuthContext.Provider>
   )
 }
-
-export const useAuth = () => useContext(AuthContext)

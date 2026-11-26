@@ -22,7 +22,8 @@ BE/
   static.go      trả file web React
 FE/src/
   api.ts         hàm gọi API dùng chung
-  auth.tsx       lưu trạng thái đăng nhập
+  auth.ts        useAuth(): ai đang đăng nhập
+  AuthProvider.tsx lưu trạng thái đăng nhập
   App.tsx        menu + định tuyến các trang
   pages/         các trang: Home, ProductDetail, Login/Register, ProductForm, Dashboard, Admin
 Dockerfile       build web + Go thành một image để deploy

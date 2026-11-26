@@ -7,7 +7,7 @@ description: Cách thêm hoặc sửa trang, component và lời gọi API trong
 
 ## Bố cục
 - `src/api.ts`: kiểu dữ liệu (`User`, `Product`, `Feedback`...) và hàm `api<T>(path, options)`, `post<T>(path, body)`. Mọi lời gọi server đi qua đây (tự gắn token, tự ném `Error` với câu lỗi tiếng Việt từ server).
-- `src/auth.tsx`: `useAuth()` trả `{ user, loading, saveLogin, logout }`.
+- `src/auth.ts` + `src/AuthProvider.tsx`: `useAuth()` trả `{ user, loading, saveLogin, logout }`.
 - `src/App.tsx`: thanh menu + khai báo `<Route>`. Trang cần đăng nhập bọc trong `<NeedLogin>`, trang admin `<NeedLogin admin>`.
 - `src/pages/*.tsx`: mỗi trang một file, `export default function TenTrang()`.
 - `src/index.css`: toàn bộ CSS, dùng biến màu ở `:root`. Class có sẵn: `btn`, `btn-ghost`, `box`, `card`, `grid`, `row`, `between`, `muted`, `small`, `error`, `tag`, `stats`, `stat`.

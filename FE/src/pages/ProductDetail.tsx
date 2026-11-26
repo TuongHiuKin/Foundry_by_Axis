@@ -25,7 +25,7 @@ export default function ProductDetail() {
 
   useEffect(() => {
     api<Product>(`/products/${id}`).then(setProduct).catch((e) => setError(e.message))
-    loadFeedbacks()
+    api<Feedback[]>(`/products/${id}/feedbacks`).then(setFeedbacks)
   }, [id])
 
   async function sendFeedback(e: FormEvent) {
