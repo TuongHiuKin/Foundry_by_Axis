@@ -5,3 +5,5 @@ BE/server
 BE/tmp/
 .env
 *.exe
+.local/
+*.zip

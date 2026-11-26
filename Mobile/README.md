@@ -1,6 +1,6 @@
 # Mobile – app Foundry (React Native + Expo)
 
-Chưa bắt đầu. Khi làm, đọc skill `.agent/skills/foundry-expo-mobile/SKILL.md`.
+Chưa bắt đầu. Khi làm, đọc skill `.agents/skills/foundry-expo-mobile/SKILL.md`.
 
 Tạo dự án trong thư mục này:
 

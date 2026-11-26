@@ -29,8 +29,10 @@ FE/src/
 Dockerfile       build web + Go thành một image để deploy
 render.yaml      cấu hình deploy trên Render
 Mobile/          app Expo (chưa làm)
-.agent/          skill và quy ước cho agent viết code
-AGENTS.md        hướng dẫn chung cho mọi agent
+.agents/         skill (portable + foundry-*) và routing cho agent
+.claude/skills/  bản sao skill cho Claude Code
+AGENTS.md        hướng dẫn chung cho mọi agent (CLAUDE.md import file này)
+docs/            tài liệu: product, architecture, adr, api, testing
 ```
 
 ## Chạy trên máy
