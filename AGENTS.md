@@ -16,7 +16,7 @@ Monorepo, single owner, work tracked with GitHub issues + PRs.
 |---|---|---|
 | `BE/` | Go 1.26, Gin, pgx v5 (PostgreSQL), JWT HS256, bcrypt | `.agents/skills/foundry-go-api/SKILL.md` |
 | `FE/` | React 19, Vite, TypeScript, react-router-dom | `.agents/skills/foundry-react-page/SKILL.md` |
-| `Mobile/` | React Native + Expo (not started) | `.agents/skills/foundry-expo-mobile/SKILL.md` |
+| `Mobile/` | React Native + Expo SDK 58, Expo Router, TS, EAS build | `.agents/skills/foundry-expo-mobile/SKILL.md` |
 | root | `Dockerfile`, `render.yaml`, `docker-compose.yml` | `.agents/skills/foundry-deploy/SKILL.md` |
 
 Architecture, data model, auth: `.agents/skills/foundry-project/SKILL.md` (read first).
@@ -29,7 +29,7 @@ BE/            Go server: /api/* JSON + serves built FE from ./web
   schema.sql   idempotent DDL — hot file
   auth.go products.go feedback.go reports.go admin.go helpers.go static.go
 FE/src/        api.ts (types + fetch helper), auth.ts, AuthProvider.tsx, App.tsx (routes — hot file), pages/, index.css
-Mobile/        README only
+Mobile/        Expo app: src/app/ (routes), src/lib/ (api.ts, auth.tsx, token.ts), src/components/, __tests__/, eas.json
 docs/          product, architecture, adr, api, testing
 .agents/       skills/ (portable + foundry-*), routing.md
 .claude/skills mirror of .agents/skills for Claude Code
@@ -52,6 +52,12 @@ docs/          product, architecture, adr, api, testing
 | Screenshots | `npm run screenshot` (reads `<LOCAL_DIR>/screenshots/request.json`) | FE |
 | Run BE | `go run .` (needs env, see `BE/.env.example`) | BE |
 | Run FE dev | `npm run dev` → http://localhost:5173, proxies `/api` to :8080 | FE |
+| Restore Mobile deps | `npm ci` | Mobile |
+| Typecheck Mobile | `npm run typecheck` | Mobile |
+| Lint Mobile | `npm run lint` | Mobile |
+| Unit tests Mobile (Jest) | `npm test` | Mobile |
+| Run Mobile dev | `npx expo start` (scan QR with Expo Go) | Mobile |
+| Android build (AAB) | `eas build -p android --profile production` | Mobile |
 | Docker image | `docker build -t foundry .` | root |
 
 Env vars for BE: `DATABASE_URL`, `JWT_SECRET`, `ADMIN_EMAIL` (registering with this email → admin), `PORT` (default 8080).
@@ -61,10 +67,11 @@ Env vars for BE: `DATABASE_URL`, `JWT_SECRET`, `ADMIN_EMAIL` (registering with t
 |---|---|---|---|
 | BE unit/API | `go test` + `net/http/httptest` | `BE/*_test.go` | `go test ./...` (BE) |
 | FE unit | Vitest (node env) | `FE/src/**/*.test.ts(x)` | `npm test` (FE) |
+| Mobile unit/screen | Jest + jest-expo + React Native Testing Library | `Mobile/__tests__/` | `npm test` (Mobile) |
 | E2E | Playwright (`FE/playwright.config.ts`) | `FE/tests/e2e/` | `npm run test:e2e` (FE) |
 | Screenshot suite | Playwright, tag `@screenshot` | `FE/tests/e2e/screenshot.spec.ts` | `npm run screenshot` (FE) |
 
-- Test folders (locked during GREEN/REFACTOR): `BE/*_test.go`, `BE/testdata/`, `FE/src/**/*.test.ts(x)`, `FE/tests/e2e/`, `FE/playwright.config.ts`.
+- Test folders (locked during GREEN/REFACTOR): `BE/*_test.go`, `BE/testdata/`, `FE/src/**/*.test.ts(x)`, `FE/tests/e2e/`, `FE/playwright.config.ts`, `Mobile/__tests__/`.
 - Databases: `docker compose up -d` creates `foundry`, `foundry_test`, `foundry_e2e` (init script `BE/testdata/init-db.sql`, runs only on a fresh volume).
 - BE tests: `newTestServer(t)` in `BE/testhelpers_test.go` truncates all tables and builds the router; skips when `TEST_DATABASE_URL` is unset. Set it to `postgres://foundry:foundry@localhost:5433/foundry_test?sslmode=disable`. Never point it at a real database.
 - E2E: Playwright `webServer` starts BE (`go run .` in `BE/`, port 8080, DB `foundry_e2e`, `ADMIN_EMAIL=admin@e2e.test`) and FE dev (port 5173). PostgreSQL must be running. E2E DB is not wiped: use `uniqueEmail()` / unique titles from `FE/tests/e2e/helpers.ts`.
